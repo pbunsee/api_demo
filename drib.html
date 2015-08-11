@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js'></script>
+  <script>
+
+    function onSuccess(json) {
+      console.log(json);
+      window.shots = json;
+
+      most_popular = _(shots).sortBy(function(s) {
+          return -s["likes_count"];
+      });
+
+      top_10 = _(most_popular).first(10);
+
+      _(top_10).each(function(shot){
+        $("<img src='" + shot["image_url"] + "'>").appendTo("#images");
+       });
+    }
+
+    $(function() {
+      promise = $.getJSON('http://localhost:8000/custom_dribbble.json', onSuccess)
+
+      promise.fail(function(e) { console.log('failed!'); console.log(e) });
+     });
+
+  </script>
+</head>
+<body>
+
+<h1>Hi</h1>
+<div id="images"></div>
+
+</body>
+
+</html>
